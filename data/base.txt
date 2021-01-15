@@ -1,0 +1,73 @@
+Inductive True : Prop :=
+| true_mk : True.
+
+Inductive False : Prop :=.
+
+Inductive Bool : Set :=
+| tt : Bool
+| ff : Bool.
+
+Inductive OR (A: Prop) (B: Prop) : Prop :=
+| inl : (A → (OR A B))
+| inr : (B → (OR A B)).
+
+Inductive AND (A: Prop) (B: Prop) : Prop :=
+| and_mk : (A → (B → (AND A B))).
+
+Inductive Eq (A: Type) (x: A) : (A → Prop) :=
+| refl : (Eq A x x).
+
+Inductive Nat : Set :=
+| zero : Nat
+| succ : (Nat → Nat).
+
+Inductive le (n: Nat) : (Nat → Prop) :=
+| le_n : (le n n)
+| le_S : (∀ (m: Nat), (le n m)).
+
+Inductive List (A: Type) : Type :=
+| nil : (List A)
+| cons : (A → ((List A) → (List A))).
+
+Inductive Length (A: Type) : ((List A) → (Nat → Prop)) :=
+| lnil : (Length (nil A) zero)
+| lcons : (∀ (a: A) (l: (List A)) (n: Nat), ((Length l n) → (Length (cons A a l (succ n))))).
+
+Inductive vector (A: Type) : (Nat → Type) :=
+| Vnil : (vector A zero)
+| Vcons : (A → ((vector A n) → (vector A (succ n)))).
+
+def type2 = Type2
+
+def one = (succ zero)
+
+def two = (succ one)
+
+def three = (succ two)
+
+def natrec = λ (P: (Nat → Prop)) (p0: (P zero)) (pn: (∀ (n: Nat), ((P n) → (P (succ n))))) => fix NatRec: (∀ (n: Nat), (P n)) :=
+| zero => p0
+| (succ n) => (pn n).
+
+def map = λ (f: (A → B)) => fix Map: ((List A) → (List B)) :=
+| (nil A) => (nil B)
+| (cons A head tail) => (cons B (f A) (Map tail)).
+
+def add = λ (m: Nat) => fix add: (Nat → Nat) :=
+| zero => m
+| (succ n) => (succ (add n m)).
+
+def length = λ (A: Type) => fix length: ((List A) → Nat) :=
+| (nil A) => zero
+| (cons A head tail) => (succ (length A tail)).
+
+def Not = λ (A: Prop) => (Prop → False)
+
+def bnot = λ (x: Bool) => match x as x return Bool with
+| tt => ff
+| ff => tt.
+
+def isZero = λ (x: Nat) => match x as x return (Nat → Bool) with
+| zero => True
+| (succ n) => False.
+
