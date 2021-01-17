@@ -1,0 +1,65 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.33.0.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: fb3079931087be3102067bbfd6a5f3704a687a68d49deb504e470f60f6ab8c58
+
+name:           coc
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/githubuser/coc#readme>
+homepage:       https://github.com/githubuser/coc#readme
+bug-reports:    https://github.com/githubuser/coc/issues
+author:         Author name here
+maintainer:     example@example.com
+copyright:      2021 Author name here
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/githubuser/coc
+
+library
+  exposed-modules:
+      Lib
+  other-modules:
+      Paths_coc
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5,
+      text,
+      containers
+  default-language: Haskell2010
+  default-extensions: OverloadedStrings LambdaCase
+
+executable coc
+  main-is: Main.hs
+  other-modules:
+      Paths_coc
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , coc
+  default-language: Haskell2010
+
+test-suite coc-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_coc
+  hs-source-dirs:
+      test
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , coc
+  default-language: Haskell2010
