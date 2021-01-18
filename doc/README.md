@@ -18,7 +18,7 @@ $@
 
 The CoC provides a language with which we can express mathematical _terms_ (e.g. $3$, $3x+y$, $\underset{x \rightarrow 0}{lim}\frac{sin(x)}{x}$) and _types_ (e.g. pairs of real numbers $\mathbb{R} \times \mathbb{R}$, the type of functions $\mathbb{R} \rightarrow \mathbb{R}$, the type of lists of length $3$).
 
-The basic CoC syntax describes how to construct _pseudoterms_, which will represent types and terms (although some may be nonsensical).
+The basic CoC syntax describes how to construct _pseudoterms_, which will represent types and terms.
 
 - Variables, e.g. $x,y,z$
 - Applying a function to a term, e.g. `f(x)` (often written without parentheses, e.g. `plus n m`)
@@ -35,32 +35,35 @@ The basic CoC syntax describes how to construct _pseudoterms_, which will repres
   - Given the meaning of $\Pi$, it is often written as $\forall$ (which means "for all").
 - The word _sort_ refers to the type of a type. In the flavor of CoC we implement here, we have as axioms the existence of two 'ground level' sorts $Prop$ and $Set$, as well as an infinite sequence higher order sorts $Type_i$ for any natural number $i$.
 
-The power of the CoC comes from a set of accompanying rules which allow us to construct terms of a certain type, i.e. prove a judgment that a term has a certain type (and that the term is well-formed). Notationally we write this as $\{assumptions\} \vdash term : type$. These rules capture the meanings of the symbols described above, so that we can prove things like $\{x:\mathbb{R}\} \vdash (\lambda y: Set, x) : Set \rightarrow \mathbb{R}$ (i.e. a lambda expression which accepts a set but ignores it and returns a constant $x$ of type $\mathbb{R}$ has the type of $Set \rightarrow \mathbb{R}$).
+The power of the CoC comes from a set of accompanying rules which allow us to construct terms of a certain type. This firstly allows us to show that a term is not nonsense, e.g. treating a natural number as a function: $1 + 3(1, 2)$. Furthermore, we can prove judgments saying a term has a certain type. Notationally we write this as $\{assumptions\} \vdash term : type$. These judgment-forming rules (described in the references below) capture the meanings of the symbols described above, so that we can prove things like:
+
+- $\{x:\mathbb{R}\} \vdash (\lambda y: Set, x) : Set \rightarrow \mathbb{R}$
+- i.e. a lambda expression which accepts a set but ignores it and returns a constant $x$ of type $\mathbb{R}$ has the type of $Set \rightarrow \mathbb{R}$.
 
 ## Why is it interesting
 
-If the basic thing we can do is show that term $t$ has type $A$, it may be confusing as to what's the interest in this language at all, since the fact that $\pi: \mathbb{R}$ or $\lambda x, cos(x): \mathbb{R} \rightarrow \mathbb{R}$ are not too remarkable. What we care about are more elaborate _propositions_ we can make about these mathematical terms, such as:
+If the only thing we can do is show that term $t$ has type $A$, it may be confusing as to what's the interest in this language at all, since the fact that $\pi: \mathbb{R}$ or $\lambda x, cos(x): \mathbb{R} \rightarrow \mathbb{R}$ aren't that remarkable. What we care about are more elaborate _propositions_ we can make about these mathematical terms, such as:
 
 - $\forall x: \mathbb{R}, sin^2x+cos^2x=1$
 - for the type of _pairs_ of $A \times B$
   - there exists a _unique_ pair of projection functions $A \xleftarrow{\pi_1} A \times B \xrightarrow{\pi_2} B$ such that for _any_ pair of functions $A \xleftarrow{f_A} X \xrightarrow{f_B} B$, there is a unique map $X \xrightarrow{f_!} A\times B$ such that $f_!\pi_A = f_A$ and $f_!\pi_B=f_b$ (i.e. one can always _factor_ out a $\pi$ component from the functions).
-- A certain compiler optimization does not alter the meaning of the unoptimized code, or a critical piece of code has no bugs.
+- After encoding the relevant real-world entities into the CoC, we might want to prove certain compiler optimization does not alter the meaning of the unoptimized code, or that a critical piece of code has no bugs.
 
-It turns out our simple typing judgments _are_ capable of proving such kinds of sweeping mathematical statements, due to a remarkable correspondance (called the [Curry Howard Isomorphism](https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence)) between the above language and the language of logic. Logical operations such as _and_, _or_, _for all_, _not_, etc. each have analogues which behave just as they do in logic.
+It turns out our simple typing judgments _are_ capable of proving such kinds of elaborate mathematical statements, due to a remarkable correspondance (called the [Curry Howard Isomorphism](https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence)) between the above language and the language of logic. Logical operations such as _and_, _or_, _for all_, _not_, etc. each have analogues which behave just as they do in logic.
 
-- Other than learning the exact translations for each of these operations, the key insight is to think of propositions as a type (called $Prop$) that can have terms which are proofs of that proposition.
+- Other than learning the exact translations for each of these operations, the key insight is to think of _propositions as types_ with _terms as proofs_ of that proposition.
 - The logical relation $A \land B$ ($A$ _and_ $B$) can be proved if and only if we have a proof of $A$ and a proof of $B$, which is tantamount to having a term of the type of pairs $A \times B$.
 - The logical relation $A \implies B$ (_if_ $A$, _then_ $B$) is tantamount to a function type $A \rightarrow B$, which provides a proof of $B$ if you feed it a proof of $A$.
 
-Continuing in this fashion, we can represent arbitrarily complex statements about arbitrarily complex mathematical structures and have a computer mechanically verify them._Discovering_ these proof terms is not a step that can be fully automated, though this is a field of active research.
+Continuing in this fashion, we can construct arbitrarily complex statements about arbitrarily complex mathematical structures and have a computer mechanically verify them. _Discovering_ these proof terms is not a step that can be fully automated, though this is a field of active research.
 
 ## Inductive types
 
 In this repo, we use some common extensions of CoC to make it more usable, most notably adding inductive types.
 
-Although booleans, natural numbers, and other types can be defined with the above infrastructure (called Church encoding), inductive types allow for an efficient representation. These inductive types can be constructed by one of their custom constructors and eliminated by case analysis (e.g. a function `I -> X` for some inductive type `I` must be defined for all possible constructors of `I`). These are easiest explained through examples (which can be found in `data/base.txt`):
+Although booleans, natural numbers, and other types _can_ be defined (called the Church encoding) with the above infrastructure, inductive types allow for an efficient and intuitive representation. A term of an inductive type must be constructed by one of its custom constructors and eliminated by case analysis (e.g. a function `I -> X` for some inductive type `I` must be defined for all possible constructors of `I`). These are easiest explained through examples (which can be found in `data/base.txt`):
 
-`Bool` can be modeled as an inductive type - i.e. something that can be `true` or `false` but not neither nor both.
+The type of Booleans, `Bool`, can be modeled as an inductive type - i.e. something that is either `true` or `false`.
 
 ```
 Inductive Bool : Set :=
@@ -73,26 +76,26 @@ The natural numbers are a prototypical example of inductive types, as any elemen
 ```
 Inductive Nat : Set :=
 | zero : Nat
-| succ : (Nat → Nat).
+| succ : Nat → Nat.
 ```
 
-`List`s and `vector`s force us to consider inductive types that have a parameter, i.e. `List` itself isn't a type but rather must be applied to some parameter (in this case, `A`, an arbitrary `Type`) to form a type. All of the constructors implicitly require this parameter too, in addition to other arguments (`nil B` lets us construct an empty `List B`, while an element `c:C` can be added to a list `l_c:List C` by calling `cons C c l_c` which produces another element of type `List C`).
+`Lists` and `vectors` force us to consider inductive types that have a parameter, i.e. `List` itself isn't a type but rather must be applied to some parameter (in this case, `A`, an arbitrary `Type`) to form a type. All of the constructors implicitly require this parameter too, in addition to other arguments (`nil B` lets us construct an empty `List B`, while an element `c:C` can be added to a list `l_c:List C` by calling `cons C c l_c` which produces another element of type `List C`).
 
 ```
 Inductive List (A: Type) : Type :=
-| nil : (List A)
-| cons : (A → ((List A) → (List A))).
+| nil : List A
+| cons : A → List A → List A.
 ```
 
-`Vector`s work very similarly, but keep track of how long the length of the list is by construction (the `Vnil X` case is forced to be of type `vector X 0` rather than any other number, and `Vcons` will always increment the type-level counter each time an element is appended).
+`Vectors` work very similarly, but keep track of how long the length of the list is at the type level (the `Vnil X` case is forced to be of type `vector X 0` rather than any other number, and `Vcons` will always increment the type-level counter each time an element is appended).
 
 ```
 Inductive vector (A: Type) : (Nat → Type) :=
-| Vnil : (vector A zero)
-| Vcons : (A → ((vector A n) → (vector A (succ n)))).
+| Vnil : vector A zero
+| Vcons : A → vector A n → vector A (succ n).
 ```
 
-We now introduce the basics of "propositions as types". We model `True` (`⊤`/`Unit`/`()`) as an inductive type with a single constructor. In _any_ context we are justified in producing a term of this type, reflecting how trivial it is to 'prove' `True`.
+We now introduce the basics of "propositions as types" (which are distinct from the encoding of `true` and `false` as _values_ of type `Bool`). We model the _proposition_ `True` (AKA `⊤`/`Unit`/`()`) as an inductive type with a single constructor. In _any_ context we are justified in producing a term of this type, reflecting how trivial it is to 'prove' `True`.
 
 ```
 Inductive True : Prop :=
@@ -109,11 +112,11 @@ There are two constructors for `Or A B` to reflect _either_ a proof of `A` or a 
 
 ```
 Inductive OR (A: Prop) (B: Prop) : Prop :=
-| inl : (A → (OR A B))
-| inr : (B → (OR A B)).
+| inl : A → OR A B
+| inr : B → OR A B.
 
 Inductive AND (A: Prop) (B: Prop) : Prop :=
-| and_mk : (A → (B → (AND A B))).
+| and_mk : A → B → AND A B.
 ```
 
 As a final example, consider the proposition that `p ≤ q`. If less-than-or-equal-to (`le`) is defined as below, then we know it could have only been constructed from one of two scenarios:
@@ -123,9 +126,11 @@ As a final example, consider the proposition that `p ≤ q`. If less-than-or-equ
 
 ```
 Inductive le: (Nat → Nat → Prop) :=
-| le_n : (∀ (n: Nat), (le zero n))
-| le_S : (∀ (n: Nat) (m: Nat), (le n m) -> le (succ n) (succ m)).
+| le_n : ∀ (n: Nat), le zero n
+| le_S : ∀ (n: Nat) (m: Nat), le n m -> le (succ n) (succ m).
 ```
+
+In fact, knowing that these are the only two constructors allows us to prove that it's _not_ the case that `1 ≤ 0`.
 
 ## Functionality
 
