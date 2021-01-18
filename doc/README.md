@@ -16,22 +16,23 @@ $@
 
 ## Background: What is CoC
 
-The CoC provides a language with which we can express mathematical _terms_ (e.g. $3$, $3x+y$, $\underset{x \rightarrow 0}{lim}\frac{sin(x)}{x}$) and _types_ (e.g. the real numbers $\mathbb{R}$, the type of functions $\mathbb{R} \rightarrow \mathbb{R}$, the type of lists of length $3$ - note, it also turns out each type is itself a term of some other type).
+The CoC provides a language with which we can express mathematical _terms_ (e.g. $3$, $3x+y$, $\underset{x \rightarrow 0}{lim}\frac{sin(x)}{x}$) and _types_ (e.g. pairs of real numbers $\mathbb{R} \times \mathbb{R}$, the type of functions $\mathbb{R} \rightarrow \mathbb{R}$, the type of lists of length $3$).
 
 The basic CoC syntax describes how to construct _pseudoterms_, which will represent types and terms (although some may be nonsensical).
 
 - Variables, e.g. $x,y,z$
+- Applying a function to a term, e.g. `f(x)` (often written without parentheses, e.g. `plus n m`)
 - Lambda abstractions
   - describe functions that substitute a variable into a body expression, e.g.:
     - the doubling function $\lambda x, x+x$
     - the identity function $\lambda z, z$
-    - a function which takes two arguments and applies the first to the second: $\lambda x, (\lambda f, f x)$.
+    - a function which takes two arguments and applies the first to the second: $\lambda f, (\lambda x, f x)$.
 - Pi types
   - represent the types of functions
   - $\Pi x:A, B$ refers to the type of functions that take a term of type $A$ and return a term of type $B$ (which may or may not depend on the value of the input, $x$)). E.g.:
     - $\Pi x:Int, List (x+x)$ accepts integers and returns elements of the type of lists of length $x+x$.
   - Often there's no dependence on the $x$ at all, so we abbreviate these cases with notation $A \rightarrow B$.
-  - Given the meaning of `\Pi`, it is often written as `\forall` (which means "for all").
+  - Given the meaning of $\Pi$, it is often written as $\forall$ (which means "for all").
 - The word _sort_ refers to the type of a type. In the flavor of CoC we implement here, we have as axioms the existence of two 'ground level' sorts $Prop$ and $Set$, as well as an infinite sequence higher order sorts $Type_i$ for any natural number $i$.
 
 The power of the CoC comes from a set of accompanying rules which allow us to construct terms of a certain type, i.e. prove a judgment that a term has a certain type (and that the term is well-formed). Notationally we write this as $\{assumptions\} \vdash term : type$. These rules capture the meanings of the symbols described above, so that we can prove things like $\{x:\mathbb{R}\} \vdash (\lambda y: Set, x) : Set \rightarrow \mathbb{R}$ (i.e. a lambda expression which accepts a set but ignores it and returns a constant $x$ of type $\mathbb{R}$ has the type of $Set \rightarrow \mathbb{R}$).
