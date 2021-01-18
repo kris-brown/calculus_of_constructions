@@ -21,9 +21,9 @@ Inductive Nat : Set :=
 | zero : Nat
 | succ : (Nat → Nat).
 
-Inductive le (n: Nat) : (Nat → Prop) :=
-| le_n : (le n n)
-| le_S : (∀ (m: Nat), (le n m)).
+Inductive le: (Nat → Nat → Prop) :=
+| le_n : (∀ (n: Nat), (le zero n))
+| le_S : (∀ (n: Nat) (m: Nat), (le n m) -> le (succ n) (succ m)).
 
 Inductive List (A: Type) : Type :=
 | nil : (List A)
