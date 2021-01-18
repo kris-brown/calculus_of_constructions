@@ -13,44 +13,47 @@
 
 ## Background: What is CoC
 
-The CoC provides a language with which we can express mathematical _terms_ (e.g. ![3](doc/teximg/tex_img_0_N4MH7.png), ![3x+y](doc/teximg/tex_img_1_OZHGD.png), ![\underset{x \rightarrow 0}{lim}\frac{sin(x)}{x}](doc/teximg/tex_img_2_CN680.png)) and _types_ (e.g. pairs of real numbers ![\mathbb{R} \times \mathbb{R}](doc/teximg/tex_img_3_C2096.png), the type of functions ![\mathbb{R} \rightarrow \mathbb{R}](doc/teximg/tex_img_4_X6SCQ.png), the type of lists of length ![3](doc/teximg/tex_img_5_1J82R.png)).
+The CoC provides a language with which we can express mathematical _terms_ (e.g. ![3](doc/teximg/tex_img_0_DDMWP.png), ![3x+y](doc/teximg/tex_img_1_G8UGA.png), ![\underset{x \rightarrow 0}{lim}\frac{sin(x)}{x}](doc/teximg/tex_img_2_L5QVY.png)) and _types_ (e.g. pairs of real numbers ![\mathbb{R} \times \mathbb{R}](doc/teximg/tex_img_3_GUPET.png), the type of functions ![\mathbb{R} \rightarrow \mathbb{R}](doc/teximg/tex_img_4_4OQZC.png), the type of lists of length ![3](doc/teximg/tex_img_5_I2AUI.png)).
 
 The basic CoC syntax describes how to construct _pseudoterms_, which will represent types and terms.
 
-- Variables, e.g. ![x,y,z](doc/teximg/tex_img_6_IPH8D.png)
+- Variables, e.g. ![x,y,z](doc/teximg/tex_img_6_Z26OV.png)
 - Applying a function to a term, e.g. `f(x)` (often written without parentheses, e.g. `plus n m`)
 - Lambda abstractions
   - describe functions that substitute a variable into a body expression, e.g.:
-    - the doubling function ![\lambda x, x+x](doc/teximg/tex_img_7_GBM6G.png)
-    - the identity function ![\lambda z, z](doc/teximg/tex_img_8_6EIBE.png)
-    - a function which takes two arguments and applies the first to the second: ![\lambda f, (\lambda x, f x)](doc/teximg/tex_img_9_32L8J.png).
+    - the doubling function ![\lambda x, x+x](doc/teximg/tex_img_7_LORC9.png)
+    - the identity function ![\lambda z, z](doc/teximg/tex_img_8_ZG97E.png)
+    - a function which takes two arguments and applies the first to the second: ![\lambda f, (\lambda x, f x)](doc/teximg/tex_img_9_XMBP0.png).
 - Pi types
   - represent the types of functions
-  - ![\Pi x:A, B](doc/teximg/tex_img_10_TRIDM.png) refers to the type of functions that take a term of type ![A](doc/teximg/tex_img_11_T373M.png) and return a term of type ![B](doc/teximg/tex_img_12_8HRYA.png) (which may or may not depend on the value of the input, ![x](doc/teximg/tex_img_13_TXHT0.png))). E.g.:
-    - ![\Pi x:Int, List (x+x)](doc/teximg/tex_img_14_4F90E.png) accepts integers and returns elements of the type of lists of length ![x+x](doc/teximg/tex_img_15_5Z70X.png).
-  - Often there's no dependence on the ![x](doc/teximg/tex_img_16_B5OSZ.png) at all, so we abbreviate these cases with notation ![A \rightarrow B](doc/teximg/tex_img_17_J8TEU.png).
-  - Given the meaning of ![\Pi](doc/teximg/tex_img_18_1S4LC.png), it is often written as ![\forall](doc/teximg/tex_img_19_IPENZ.png) (which means "for all").
-- The word _sort_ refers to the type of a type. In the flavor of CoC we implement here, we have as axioms the existence of two 'ground level' sorts ![Prop](doc/teximg/tex_img_20_TEA7V.png) and ![Set](doc/teximg/tex_img_21_O0ZI1.png), as well as an infinite sequence higher order sorts ![Type_i](doc/teximg/tex_img_22_Y8Q8C.png) for any natural number ![i](doc/teximg/tex_img_23_IFHGN.png).
+  - ![\Pi x:A, B](doc/teximg/tex_img_10_31XTJ.png) refers to the type of functions that take a term of type ![A](doc/teximg/tex_img_11_NB02U.png) and return a term of type ![B](doc/teximg/tex_img_12_7ZE7S.png) (which may or may not depend on the value of the input, ![x](doc/teximg/tex_img_13_YV9FH.png))).
+    - E.g.:
+      - Let vectors be sequences of a certain type with a fixed length
+      - The term ![\Pi x:Int, Vector \mathbb{R} (x+x)](doc/teximg/tex_img_14_38G5M.png) can be applied to an integer
+      - This returns the type of lists of real numbers of length ![x+x](doc/teximg/tex_img_15_O4LKO.png).
+  - Often there's no dependence on the ![x](doc/teximg/tex_img_16_ZY6SF.png) at all, so we abbreviate the notation of these cases as ![A \rightarrow B](doc/teximg/tex_img_17_JH59Z.png).
+  - Given the meaning of ![\Pi](doc/teximg/tex_img_18_6O9HH.png), it is often written as ![\forall](doc/teximg/tex_img_19_5FILI.png) (which means "for all").
+- The word _sort_ refers to the type of a type. In the flavor of CoC we implement here, we have as axioms the existence of two 'ground level' sorts ![Prop](doc/teximg/tex_img_20_OCQHV.png) and ![Set](doc/teximg/tex_img_21_TE5L3.png), as well as an infinite sequence higher order sorts ![Type_i](doc/teximg/tex_img_22_JUNH3.png) for any natural number ![i](doc/teximg/tex_img_23_NFY0C.png).
 
-The power of the CoC comes from a set of accompanying rules which allow us to construct terms of a certain type. This firstly allows us to show that a term is not nonsense, e.g. treating a natural number as a function: ![1 + 3(1, 2)](doc/teximg/tex_img_24_VDV30.png). Furthermore, we can prove judgments saying a term has a certain type. Notationally we write this as ![\{assumptions\} \vdash term : type](doc/teximg/tex_img_25_2RTA9.png). These judgment-forming rules (described in the references below) capture the meanings of the symbols described above, so that we can prove things like:
+The power of the CoC comes from a set of accompanying rules which allow us to construct terms of a certain type. This firstly allows us to show that a term is not nonsense, e.g. treating a natural number as a function: ![1 + 3(1, 2)](doc/teximg/tex_img_24_5AV0N.png). Furthermore, we can prove judgments saying a term has a certain type. Notationally we write this as ![\{assumptions\} \vdash term : type](doc/teximg/tex_img_25_LUFNZ.png). These judgment-forming rules (described in the references below) capture the meanings of the symbols described above, so that we can prove things like:
 
-- ![\{x:\mathbb{R}\} \vdash (\lambda y: Set, x) : Set \rightarrow \mathbb{R}](doc/teximg/tex_img_26_1H823.png)
-- i.e. a lambda expression which accepts a set but ignores it and returns a constant ![x](doc/teximg/tex_img_27_SW6KL.png) of type ![\mathbb{R}](doc/teximg/tex_img_28_JTWR3.png) has the type of ![Set \rightarrow \mathbb{R}](doc/teximg/tex_img_29_KHC26.png).
+- ![\{x:\mathbb{R}\} \vdash (\lambda y: Set, x) : Set \rightarrow \mathbb{R}](doc/teximg/tex_img_26_5EFHJ.png)
+- i.e. a lambda expression which accepts a set but ignores it and returns a constant ![x](doc/teximg/tex_img_27_FOYRX.png) of type ![\mathbb{R}](doc/teximg/tex_img_28_6D2RC.png) has the type of ![Set \rightarrow \mathbb{R}](doc/teximg/tex_img_29_44TEV.png).
 
 ## Why is it interesting
 
-If the only thing we can do is show that term ![t](doc/teximg/tex_img_30_L7YLT.png) has type ![A](doc/teximg/tex_img_31_NUVS1.png), it may be confusing as to what's the interest in this language at all, since the fact that ![\pi: \mathbb{R}](doc/teximg/tex_img_32_8981F.png) or ![\lambda x, cos(x): \mathbb{R} \rightarrow \mathbb{R}](doc/teximg/tex_img_33_XUUUJ.png) aren't that remarkable. What we care about are more elaborate _propositions_ we can make about these mathematical terms, such as:
+If the only thing we can do is show that term ![t](doc/teximg/tex_img_30_8EDZ2.png) has type ![A](doc/teximg/tex_img_31_7RW24.png), it may be confusing as to what's the interest in this language at all, since the fact that ![\pi: \mathbb{R}](doc/teximg/tex_img_32_DUXEV.png) or ![\lambda x, cos(x): \mathbb{R} \rightarrow \mathbb{R}](doc/teximg/tex_img_33_8P9QS.png) aren't that remarkable. What we care about are more elaborate _propositions_ we can make about these mathematical terms, such as:
 
-- ![\forall x: \mathbb{R}, sin^2x+cos^2x=1](doc/teximg/tex_img_34_6E0VA.png)
-- for the type of _pairs_ of ![A \times B](doc/teximg/tex_img_35_0WZ3E.png)
-  - there exists a _unique_ pair of projection functions ![A \xleftarrow{\pi_1} A \times B \xrightarrow{\pi_2} B](doc/teximg/tex_img_36_R01FB.png) such that for _any_ pair of functions ![A \xleftarrow{f_A} X \xrightarrow{f_B} B](doc/teximg/tex_img_37_O8E2X.png), there is a unique map ![X \xrightarrow{f_!} A\times B](doc/teximg/tex_img_38_99E9S.png) such that ![f_!\pi_A = f_A](doc/teximg/tex_img_39_IMY1H.png) and ![f_!\pi_B=f_b](doc/teximg/tex_img_40_W370J.png) (i.e. one can always _factor_ out a ![\pi](doc/teximg/tex_img_41_ENECN.png) component from the functions).
+- ![\forall x: \mathbb{R}, sin^2x+cos^2x=1](doc/teximg/tex_img_34_7Q3DP.png)
+- for the type of _pairs_ of ![A \times B](doc/teximg/tex_img_35_4ZW8B.png)
+  - there exists a _unique_ pair of projection functions ![A \xleftarrow{\pi_1} A \times B \xrightarrow{\pi_2} B](doc/teximg/tex_img_36_E9KKF.png) such that for _any_ pair of functions ![A \xleftarrow{f_A} X \xrightarrow{f_B} B](doc/teximg/tex_img_37_PKWH8.png), there is a unique map ![X \xrightarrow{f_!} A\times B](doc/teximg/tex_img_38_FUXVD.png) such that ![f_!\pi_A = f_A](doc/teximg/tex_img_39_O7NR4.png) and ![f_!\pi_B=f_b](doc/teximg/tex_img_40_CNU5S.png) (i.e. one can always _factor_ out a ![\pi](doc/teximg/tex_img_41_L6DG4.png) component from the functions).
 - After encoding the relevant real-world entities into the CoC, we might want to prove certain compiler optimization does not alter the meaning of the unoptimized code, or that a critical piece of code has no bugs.
 
 It turns out our simple typing judgments _are_ capable of proving such kinds of elaborate mathematical statements, due to a remarkable correspondance (called the [Curry Howard Isomorphism](https://en.wikipedia.org/wiki/Curry%E2%80%93Howard_correspondence)) between the above language and the language of logic. Logical operations such as _and_, _or_, _for all_, _not_, etc. each have analogues which behave just as they do in logic.
 
 - Other than learning the exact translations for each of these operations, the key insight is to think of _propositions as types_ with _terms as proofs_ of that proposition.
-- The logical relation ![A \land B](doc/teximg/tex_img_42_AZ52B.png) (![A](doc/teximg/tex_img_43_CMWRU.png) _and_ ![B](doc/teximg/tex_img_44_90CL9.png)) can be proved if and only if we have a proof of ![A](doc/teximg/tex_img_45_ED3EP.png) and a proof of ![B](doc/teximg/tex_img_46_KD8DO.png), which is tantamount to having a term of the type of pairs ![A \times B](doc/teximg/tex_img_47_WOXCB.png).
-- The logical relation ![A \implies B](doc/teximg/tex_img_48_1M9GF.png) (_if_ ![A](doc/teximg/tex_img_49_8QGEG.png), _then_ ![B](doc/teximg/tex_img_50_D2LLK.png)) is tantamount to a function type ![A \rightarrow B](doc/teximg/tex_img_51_R49S5.png), which provides a proof of ![B](doc/teximg/tex_img_52_4HHZZ.png) if you feed it a proof of ![A](doc/teximg/tex_img_53_PCTQ3.png).
+- The logical relation ![A \land B](doc/teximg/tex_img_42_6TMCX.png) (![A](doc/teximg/tex_img_43_0Z5DR.png) _and_ ![B](doc/teximg/tex_img_44_0T09E.png)) can be proved if and only if we have a proof of ![A](doc/teximg/tex_img_45_3IIMY.png) and a proof of ![B](doc/teximg/tex_img_46_O1K0Q.png), which is tantamount to having a term of the type of pairs ![A \times B](doc/teximg/tex_img_47_SWRVS.png).
+- The logical relation ![A \implies B](doc/teximg/tex_img_48_10PVQ.png) (_if_ ![A](doc/teximg/tex_img_49_Z5TW9.png), _then_ ![B](doc/teximg/tex_img_50_TN77L.png)) is tantamount to a function type ![A \rightarrow B](doc/teximg/tex_img_51_6RQVN.png), which provides a proof of ![B](doc/teximg/tex_img_52_1T9B7.png) if you feed it a proof of ![A](doc/teximg/tex_img_53_SP1L6.png).
 
 Continuing in this fashion, we can construct arbitrarily complex statements about arbitrarily complex mathematical structures and have a computer mechanically verify them. _Discovering_ these proof terms is not a step that can be fully automated, though this is a field of active research.
 
@@ -68,7 +71,7 @@ Inductive Bool : Set :=
 | ff : Bool.
 ```
 
-The natural numbers are a prototypical example of inductive types, as any element of it is either zero or the successor to another natural number (thus, `zero` lets us constructor a `Nat` in any context, and the `succ` constructor behaves like a function of type `Nat → Nat`).
+The natural numbers are a prototypical example of inductive types, as any element of it is either zero or the successor to another natural number (thus, `zero` lets us construct a `Nat` in any context, and the `succ` constructor behaves like a function of type `Nat → Nat`).
 
 ```
 Inductive Nat : Set :=
@@ -143,7 +146,3 @@ This repo has implementations in different languages.
 ## References
 
 1. TODO
-
-```
-
-```

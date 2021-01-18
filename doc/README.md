@@ -29,9 +29,12 @@ The basic CoC syntax describes how to construct _pseudoterms_, which will repres
     - a function which takes two arguments and applies the first to the second: $\lambda f, (\lambda x, f x)$.
 - Pi types
   - represent the types of functions
-  - $\Pi x:A, B$ refers to the type of functions that take a term of type $A$ and return a term of type $B$ (which may or may not depend on the value of the input, $x$)). E.g.:
-    - $\Pi x:Int, List (x+x)$ accepts integers and returns elements of the type of lists of length $x+x$.
-  - Often there's no dependence on the $x$ at all, so we abbreviate these cases with notation $A \rightarrow B$.
+  - $\Pi x:A, B$ refers to the type of functions that take a term of type $A$ and return a term of type $B$ (which may or may not depend on the value of the input, $x$)).
+    - E.g.:
+      - Let vectors be sequences of a certain type with a fixed length
+      - The term $\Pi x:Int, Vector \mathbb{R} (x+x)$ can be applied to an integer
+      - This returns the type of lists of real numbers of length $x+x$.
+  - Often there's no dependence on the $x$ at all, so we abbreviate the notation of these cases as $A \rightarrow B$.
   - Given the meaning of $\Pi$, it is often written as $\forall$ (which means "for all").
 - The word _sort_ refers to the type of a type. In the flavor of CoC we implement here, we have as axioms the existence of two 'ground level' sorts $Prop$ and $Set$, as well as an infinite sequence higher order sorts $Type_i$ for any natural number $i$.
 
@@ -71,7 +74,7 @@ Inductive Bool : Set :=
 | ff : Bool.
 ```
 
-The natural numbers are a prototypical example of inductive types, as any element of it is either zero or the successor to another natural number (thus, `zero` lets us constructor a `Nat` in any context, and the `succ` constructor behaves like a function of type `Nat → Nat`).
+The natural numbers are a prototypical example of inductive types, as any element of it is either zero or the successor to another natural number (thus, `zero` lets us construct a `Nat` in any context, and the `succ` constructor behaves like a function of type `Nat → Nat`).
 
 ```
 Inductive Nat : Set :=
@@ -146,7 +149,3 @@ This repo has implementations in different languages.
 ## References
 
 1. TODO
-
-```
-
-```
