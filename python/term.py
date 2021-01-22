@@ -447,7 +447,7 @@ class App(Term):
         '''
         For a term with multiple args applied to it,
         get the original term being applied to,
-        e.g. `(f(g))(h)` -> `(f, [g, h])`
+        e.g. `(f(g))(h)` -> `[f, g, h])`
         '''
         if isinstance(self.t1, App):
             return self.t1.args() + [self.t2]
@@ -581,27 +581,12 @@ class ITypeDecl:
         '''
         icontrees = [Tree('icon', [Tok(cd), v.to_lark()])
                      for cd, v in self.decls.items()]
-        # for condecl, condecl_Term in self.decls.items():
-        #     condeclargs = list(condecl.args.items())
-        #     pars = []
-
-        #     for i, (k, v) in enumerate(condeclargs):
-        #         is_dep = k in set.union(
-        #             it_term.freevars(), *[
-        #                 a[1].freevars() for a in condeclargs[i:]],
-        #             *[cd.freevars() for cd in condecl.indices])
-        #         pars.append(arg_tree(k, v) if is_dep else v.to_lark())
-
-        #     icontrees.append(
-        #         Tok(condecl.name),
-        #         condecl_term.to_lark()]))
-
         return Tree('itype', [Tok(self.name), *[
             arg_tree(v, t) for v, t in self.pars.items()],
             self.arity.to_lark(), *icontrees])
 
 
-@ dataclass(frozen=True)
+@dataclass(frozen=True)
 class ICon:
     itype: str
     name: str
@@ -610,46 +595,6 @@ class ICon:
 
     def __str__(self) -> str:
         return '%s.%s' % (self.itype, self.name)
-
-
-# @dataclass(frozen=True)
-# class MatchCase:
-#     cons: str
-#     ret: Term
-#     args: T[Term, ...] = field(default_factory=tuple)
-
-#     def __iter__(self) -> I[Term]:
-#         return iter([self.ret, *self.args])
-
-#     def term(self) -> Term:
-#         return Apps(Var(self.cons), *self.args)
-
-#     @classmethod
-#     def from_lark(cls, tree: U[str, Tree]) -> 'MatchCase':
-#         assert isinstance(tree, Tree)
-#         assert tree.data == 'matchcase'
-#         pat, ret = tree.children
-#         assert isinstance(pat, Tree)
-#         assert isinstance(ret, Tree)
-#         if pat.data == 'app':
-#             app = App.from_lark(pat)
-#             appargs = app.args()
-#             cons_, args = appargs[0], tuple(appargs[1:])
-#             assert isinstance(cons_, Var)
-#             cons = cons_.sym
-#         elif pat.data == 'var':
-#             cons, args = Var.from_lark(pat).sym, ()
-#         else:
-#             raise ValueError()
-#         return MatchCase(cons, Term.term_from_lark(ret), args)
-
-#     def sub(self, v: str, t: Term) -> 'MatchCase':
-#         return MatchCase(self.cons, self.ret.sub(v, t),
-#                          tuple(a.sub(v, t) for a in self.args))
-
-#     def freevars(self, fv: S[str] = None) -> S[str]:
-#         return set.union(self.ret.freevars(fv),
-#                          *[a.freevars(fv) for a in self.args])
 
 
 @dataclass(eq=False, unsafe_hash=True, frozen=True)
@@ -728,33 +673,6 @@ class Match(Term):
         return Match(Term.term_from_lark(tree.children[0]),
                      tree.children[1].value,
                      Term.term_from_lark(tree.children[2]), tuple(cases))
-
-
-# @dataclass(unsafe_hash=True, frozen=True)
-# class FixCase:
-#     ret: Term
-#     arg: Term
-
-#     def __iter__(self) -> I[Term]:
-#         return chain(iter([self.ret]), iter(self.args))
-
-#     def sub(self, v: str, t: Term) -> 'FixCase':
-#         return FixCase(self.ret.sub(v, t),
-#                        tuple([a.sub(v, t) for a in self.args]))
-
-#     def freevars(self, fv: S[str] = None) -> S[str]:
-#         return set.union(self.ret.freevars(fv),
-#                          *[a.freevars(fv) for a in self.args])
-
-#     def to_lark(self) -> Tree:
-#         return Tree('fixcase', [*[a.to_lark() for a in self.args],
-#                                 self.ret.to_lark()])
-
-#     @classmethod
-#  def from_lark(cls, tree: Tree) -> 'FixCase':
-#  assert tree.data == 'fixcase'
-#  terms = [Term.term_from_lark(x) for x in tree.children]  # type: ignore
-#  return FixCase(terms[-1], tuple(terms[:-1]))
 
 
 @dataclass(eq=False, unsafe_hash=True, frozen=True)

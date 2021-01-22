@@ -142,9 +142,11 @@ This repo has implementations in different languages.
 |                    Language                    |           Python            |         Haskell          |
 | :--------------------------------------------: | :-------------------------: | :----------------------: |
 |                 Run test suite                 | ✅<br> Run `pytest test.py` | ✅ <br> Run `stack test` |
-| Judge/typecheck pseudoterms to determine types |             ✅              |            ❌            |
-|         Evaluate/β-reduce expressions          |             ✅              |            ❌            |
-|  Pretty print and parse files of expressions   |             ✅              |            ❌            |
+| Judge/typecheck pseudoterms to determine types |             ✅              |            ✅            |
+|         Evaluate/β-reduce expressions          |             ✅              |            ✅            |
+|  Pretty print and parse files of expressions   |             ✅              |            ✅            |
+|                 Property tests                 |             ❌              |            ❌            |
+| Well-formedness/termination checking of terms  |             ❌              |            ❌            |
 
 ## References
 

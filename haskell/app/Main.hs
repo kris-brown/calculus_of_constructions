@@ -1,6 +1,8 @@
 module Main where
 
-import Lib
+import Base (base)
+import Checker (writeFile)
+import Prelude hiding (writeFile)
 
 main :: IO ()
-main = putStrLn "TBD"
+main = writeFile base "../data/base2.txt"

@@ -75,9 +75,9 @@ for x in [
 
     ITypeDecl('vector', Pi('_', Nat, Type), dict(A=Type),
               dict(Vnil=Apps(Vect, vA, zero),
-                   Vcons=Pis(Apps(Vect, vA, Sn),
-                             a=vA, v=Apps(
-                       Vect, vA, vN)))),
+                   Vcons=Pis(Fun(Apps(
+                       Vect, vA, vN), Apps(Vect, vA, Sn)),
+                  a=vA, n=Nat))),
 ]:
     base.add_type(x)
 
@@ -99,14 +99,14 @@ for name, val in dict(
         p0=App(vP, zero),
         pn=Pi('n', Nat, Fun(App(vP, vN), App(vP, Sn)))),
 
-    map=Lams(Fix("Map", Fun(ListA, App(List, vB)),
-                 ((nilA, App(nil, vB)),
-                  (consHeadTail,
-                   Apps(App(cons, vB),
-                        App(vF, vA),
-                        App(Map, vTail),),
-                   ))),
-             f=Fun(vA, vB)),
+    map=Lam('f', Fun(vA, vB),
+            Fix("Map", Fun(ListA, App(List, vB)),
+                ((nilA, App(nil, vB)),
+                 (consHeadTail,
+                  Apps(App(cons, vB),
+                       App(vF, vHead),
+                       App(Map, vTail),),
+                  )))),
 
     add=Lam('m', Nat, Fix("add", Fun(Nat, Nat), (
         (zero, vM),
@@ -121,7 +121,7 @@ for name, val in dict(
     bnot=Lam('x', Bool, Match(vX, 'x', Bool,
                               ((tt, ff), (ff, tt)))),
 
-    isZero=Lam('x', Nat, Match(Var('x'), 'x', Fun(Nat, Bool), (
+    isZero=Lam('x', Nat, Match(vX, 'x', Fun(Nat, Bool), (
         (zero, True_),
         (Sn, False_))))
 
@@ -139,8 +139,4 @@ def mk_list(typ: Term, *elems: Term) -> Term:
 
 
 if __name__ == '__main__':
-    if True:
-        print("\n\n", *[base.showdecl(x)
-                        for x in base.itypes.keys()],
-              *[base.show_def(k) for k in base.defs],
-              sep='\n\n')
+    base.to_file('../data/base.txt')

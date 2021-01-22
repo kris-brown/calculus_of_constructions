@@ -315,6 +315,15 @@ class TypeChecker:
         else:
             raise NotImplementedError
 
+    def to_file(self, pth: str) -> None:
+        decls = [*[self.showdecl(x)
+                   for x in self.itypes.keys()],
+                 *[self.show_def(k) for k in self.defs]]
+        txt = '\n\n'.join(decls)
+        with open(pth, 'w') as f:
+            f.write(txt)
+        print(txt)
+
     def from_file(self, pth: str) -> None:
         '''Add definitions / inductive types from a file'''
         newparser = Lark(general_parser.source_grammar.replace(

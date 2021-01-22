@@ -27,7 +27,7 @@ source-repository head
 
 library
   exposed-modules:
-      Lib
+      Term Parse Base Checker
   other-modules:
       Paths_coc
   hs-source-dirs:
@@ -35,9 +35,11 @@ library
   build-depends:
       base >=4.7 && <5,
       text,
-      containers
+      containers,
+      parsec
   default-language: Haskell2010
   default-extensions: OverloadedStrings LambdaCase
+  ghc-options: -Wall -Werror
 
 executable coc
   main-is: Main.hs
@@ -45,7 +47,7 @@ executable coc
       Paths_coc
   hs-source-dirs:
       app
-  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror
   build-depends:
       base >=4.7 && <5
     , coc
@@ -62,4 +64,11 @@ test-suite coc-test
   build-depends:
       base >=4.7 && <5
     , coc
+    , tasty
+    , tasty-hunit
+    , hspec
+    , parsec
+    , containers
+
   default-language: Haskell2010
+  default-extensions: OverloadedStrings LambdaCase
