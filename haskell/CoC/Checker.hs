@@ -1,5 +1,6 @@
-module Checker (TypeChecker (..), writeFile, subDef, judge) where
+module CoC.Checker (TypeChecker (..), writeFile, subDef, judge) where
 
+import CoC.Term (Const (..), ITypeDecl (..), Sort (..), Term (..), beta, pis, sub)
 import Data.Bifunctor (bimap)
 import Data.List (intercalate)
 import Data.Map (Map)
@@ -7,7 +8,6 @@ import qualified Data.Map as M
 import Data.Maybe (fromJust)
 import Data.Text (Text, unpack)
 import qualified System.IO
-import Term (Const (..), ITypeDecl (..), Sort (..), Term (..), beta, pis, sub)
 import Prelude hiding (writeFile)
 
 data TypeChecker = TypeChecker {itypes :: [ITypeDecl], defs :: Map Text Term}

@@ -1,4 +1,4 @@
-module Term (Sort (..), Const (..), Term (..), ITypeDecl (..), PiLike (..), apps, lams, pis, fun, appArgs, piArgs, lamArgs, funs, prop, set, type', sub, free, beta, beta', unify, termType, zipPat) where
+module CoC.Term (Sort (..), Const (..), Term (..), ITypeDecl (..), PiLike (..), apps, lams, pis, fun, appArgs, piArgs, lamArgs, funs, prop, set, type', sub, free, beta, beta', unify, termType, zipPat) where
 
 -----------------------
 
@@ -50,7 +50,7 @@ data ITypeDecl = ITypeDecl
     itParams :: [(Text, Term)],
     itConstructors :: [(Text, Term)]
   }
-  deriving (Show, Eq, Ord)
+  deriving (Eq, Ord)
 
 -----------------------
 prop :: Term
@@ -65,6 +65,8 @@ type' = S (Type 0)
 -----------------------
 -- Common operations --
 -----------------------
+instance Ord Term where
+  compare x y = undefined x y
 
 -- Manipulating the AEQ data structure
 addAEQ :: Text -> Text -> AEQ -> AEQ

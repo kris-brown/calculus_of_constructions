@@ -1,7 +1,7 @@
 module Main where
 
-import Base (base)
-import Checker (writeFile)
+import CoC.Base (base)
+import CoC.Checker (writeFile)
 import Prelude hiding (writeFile)
 
 main :: IO ()

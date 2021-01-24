@@ -27,11 +27,7 @@ source-repository head
 
 library
   exposed-modules:
-      Term Parse Base Checker
-  other-modules:
-      Paths_coc
-  hs-source-dirs:
-      src
+      CoC.Term CoC.Parse CoC.Base CoC.Checker
   build-depends:
       base >=4.7 && <5,
       text,
@@ -43,8 +39,6 @@ library
 
 executable coc
   main-is: Main.hs
-  other-modules:
-      Paths_coc
   hs-source-dirs:
       app
   ghc-options: -threaded -rtsopts -with-rtsopts=-N -Wall -Werror

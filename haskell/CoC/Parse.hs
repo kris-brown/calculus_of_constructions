@@ -1,9 +1,9 @@
-module Parse (parse, parseFile, typed, parseLam, parseApp) where
+module CoC.Parse (parse, parseFile, typed, parseLam, parseApp) where
 
+import CoC.Term (Sort (..), Term (..), apps, lams, pis)
 import Control.Monad (void)
 import Data.Bifunctor (first)
 import Data.Text (Text, pack)
-import Term (Sort (..), Term (..), apps, lams, pis)
 import Text.Parsec (spaces, (<|>))
 import qualified Text.Parsec as Parsec
 import Text.Parsec.String (Parser)

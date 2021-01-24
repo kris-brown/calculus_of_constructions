@@ -1,9 +1,9 @@
-module Base (true', false', bool, tt, ff, bnot, not', nat, zero, suc, add, one, two, three, list, nil', cons', length', indlength, vHead, vTail, le, leN, leS, vect, or', inl, inr, and', andMk, eq, refl, map', base, vA, vB, vN, vX, vF, vL, vP, vM, mkList, nilA, consA, consHeadTail) where
+module CoC.Base (true', false', bool, tt, ff, bnot, not', nat, zero, suc, add, one, two, three, list, nil', cons', length', indlength, vHead, vTail, le, leN, leS, vect, or', inl, inr, and', andMk, eq, refl, map', base, vA, vB, vN, vX, vF, vL, vP, vM, mkList, nilA, consA, consHeadTail) where
 
-import Checker (TypeChecker (..))
+import CoC.Checker (TypeChecker (..))
+import CoC.Term (Const (..), ITypeDecl (..), Sort (..), Term (..), apps, fun, funs, lams, pis, prop, set, type')
 import Data.Map (Map, fromList)
 import Data.Text (Text)
-import Term (Const (..), ITypeDecl (..), Sort (..), Term (..), apps, fun, funs, lams, pis, prop, set, type')
 
 [true', false', bool, nat, list, indlength, le, vect, or', and', eq] = map (C I) ["True", "False", "bool", "Nat", "List", "IndLength", "le", "Vector", "OR", "AND", "Eq"]
 

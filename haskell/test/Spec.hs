@@ -1,8 +1,8 @@
-import Base (base, bnot, bool, eq, false', ff, inl, le, leN, length', mkList, nat, not', or', refl, suc, three, tt, vA, vB, vN, vX, zero)
-import Checker (judge, subDef)
+import CoC.Base (base, bnot, bool, eq, false', ff, inl, le, leN, length', mkList, nat, not', or', refl, suc, three, tt, vA, vB, vN, vX, zero)
+import CoC.Checker (judge, subDef)
+import CoC.Parse (parseFile, parseLam, typed)
+import CoC.Term (Sort (..), Term (..), apps, beta, fun, funs, pis, prop, set, type')
 import Data.Either (isRight)
-import Parse (parseFile, parseLam, typed)
-import Term (Sort (..), Term (..), apps, beta, fun, funs, pis, prop, set, type')
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase, (@?))
 import qualified Text.Parsec as Parsec
@@ -65,7 +65,7 @@ unitTests =
             @? "",
         testCase
           "parseFile"
-          $ (not . null <$> parseFile "../data/simple.txt") @? "",
+          $ (not . null <$> parseFile "../data/base.txt") @? "",
         testCase
           "alpha_equiv"
           $ assertEqual
