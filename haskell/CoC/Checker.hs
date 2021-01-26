@@ -1,4 +1,4 @@
-module CoC.Checker (TypeChecker (..), writeFile, subDef, judge) where
+module CoC.Checker (TypeChecker (..), writeFile, subDef, judge, idecls, idefs, icondefs) where
 
 import CoC.Term (Const (..), ITypeDecl (..), Sort (..), Term (..), beta, pis, sub)
 import Data.Bifunctor (bimap)
@@ -20,6 +20,12 @@ idefs :: TypeChecker -> Map Text Term
 idefs (TypeChecker it _) = M.fromList $ map f it
   where
     f (ITypeDecl n ar par _) = (n, pis par ar)
+
+idecls :: TypeChecker -> Text -> ITypeDecl
+idecls (TypeChecker its _) txt = go its
+  where
+    go [] = error "Cannot find idecl"
+    go (h : t) = if txt == itName h then h else go t
 
 -- Look up the type of the constructors
 icondefs :: TypeChecker -> Map Text Term

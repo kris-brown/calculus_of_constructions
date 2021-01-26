@@ -1,4 +1,37 @@
-module CoC.Term (Sort (..), Const (..), Term (..), ITypeDecl (..), PiLike (..), apps, lams, pis, fun, appArgs, piArgs, lamArgs, funs, prop, set, type', sub, free, beta, beta', unify, termType, zipPat) where
+module CoC.Term
+  ( Sort (..),
+    Const (..),
+    Term (..),
+    ITypeDecl (..),
+    PiLike (..),
+    --
+    apps,
+    lams,
+    pis,
+    fun,
+    funs,
+    --
+    appArgs,
+    piArgs,
+    lamArgs,
+    --
+    prop,
+    set,
+    type',
+    --
+    sub,
+    subs,
+    --
+    --
+    beta,
+    beta',
+    --
+    free,
+    unify,
+    termType,
+    zipPat,
+  )
+where
 
 -----------------------
 
@@ -163,9 +196,9 @@ instance Show Term where
   show (S Set) = "Set"
   show (S (Type i)) = "Type" ++ if i == 0 then "" else show i
   show p@Pi {} = show $ toPiLike p
-  show p@Lam {} = let (args, ret) = lamArgs p in concat ["(λ", concatMap (\(a, b) -> " (" ++ show a ++ ": " ++ show b ++ ")") args, " => ", show ret, ")"]
+  show p@Lam {} = let (args, ret) = lamArgs p in concat ["(λ", concatMap (\(a, b) -> " (" ++ unpack a ++ ": " ++ show b ++ ")") args, " => ", show ret, ")"]
   show x@App {} = let args = appArgs x in paren $ unwords (map show args)
-  show (Fix name ret cs) = concat ["fix ", unpack name, ":", show ret, cases cs, "."]
+  show (Fix name ret cs) = concat ["fix ", unpack name, ": ", show ret, " :=", cases cs, "."]
   show (Match t var r cs) = concat ["match ", show t, " as ", unpack var, " return ", show r, cases cs, "."]
 
 instance Show ITypeDecl where

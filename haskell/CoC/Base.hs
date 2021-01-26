@@ -1,13 +1,13 @@
-module CoC.Base (true', false', bool, tt, ff, bnot, not', nat, zero, suc, add, one, two, three, list, nil', cons', length', indlength, vHead, vTail, le, leN, leS, vect, or', inl, inr, and', andMk, eq, refl, map', base, vA, vB, vN, vX, vF, vL, vP, vM, mkList, nilA, consA, consHeadTail) where
+module CoC.Base (true', false', bool, tt, ff, bnot, not', nat, zero, suc, add, one, two, three, list, nil', cons', length', indlength, vHead, vTail, le, leN, leS, vect, or', inl, inr, and', andMk, eq, refl, map', base, vA, vB, vN, vX, vF, vL, vP, vM, mkList, nilA, consA, consHeadTail, vnil, vcons) where
 
 import CoC.Checker (TypeChecker (..))
 import CoC.Term (Const (..), ITypeDecl (..), Sort (..), Term (..), apps, fun, funs, lams, pis, prop, set, type')
 import Data.Map (Map, fromList)
 import Data.Text (Text)
 
-[true', false', bool, nat, list, indlength, le, vect, or', and', eq] = map (C I) ["True", "False", "bool", "Nat", "List", "IndLength", "le", "Vector", "OR", "AND", "Eq"]
+[true', false', bool, nat, list, indlength, le, vect, or', and', eq] = map (C I) ["True", "False", "Bool", "Nat", "List", "IndLength", "le", "Vector", "OR", "AND", "Eq"]
 
-[tt, ff, zero, suc, nil', cons', leN, leS, inl, inr, andMk, refl] = map (C Ic) ["tt", "ff", "zero", "succ", "nil", "cons", "le_n", "le_s", "inl", "inr", "andMk", "refl"]
+[tt, ff, zero, suc, nil', cons', leN, leS, inl, inr, andMk, refl, vnil, vcons] = map (C Ic) ["tt", "ff", "zero", "succ", "nil", "cons", "le_n", "le_s", "inl", "inr", "andMk", "refl", "vnil", "vcons"]
 
 [bnot, not', add, one, two, three, length', map'] = map (C D) ["bnot", "not", "add", "one", "two", "three", "length", "map"]
 
@@ -194,6 +194,15 @@ dfns =
                 (sn', false')
               ]
           )
+      ),
+      ( "vRep",
+        lams [("A", type'), ("a", vA)] $
+          Fix
+            "Vrec"
+            (Pi "n" nat (apps [vect, vA, vN]))
+            [ (zero, App vnil vA),
+              (sn', apps [vcons, vA, Var "a", App F vN])
+            ]
       )
     ]
 
@@ -248,3 +257,5 @@ consA :: Term
 consHeadTail :: Term
 ityps :: [ITypeDecl]
 sn' :: Term
+vnil :: Term
+vcons :: Term

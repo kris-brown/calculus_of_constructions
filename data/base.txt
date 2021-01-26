@@ -70,3 +70,7 @@ def bnot = λ (x: Bool) => match x as x return Bool with
 def isZero = λ (x: Nat) => match x as x return (Nat → Bool) with
 | zero => True
 | (succ n) => False.
+
+def vrep = λ (A: Type) (x: Nat) (a: A) => fix Vrep: ∀ (n: Nat), vector A n :=
+| zero => vnil A zero
+| (succ n) => vcons A a (Vrep n).
