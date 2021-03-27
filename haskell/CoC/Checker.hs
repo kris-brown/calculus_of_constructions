@@ -39,8 +39,7 @@ judge tc t = judge' M.empty Nothing tc (beta $ subDef tc t)
 
 judge' :: Map Text Term -> Maybe Term -> TypeChecker -> Term -> Term
 judge' ctx fix tc = \case
-  (S Prop) -> S $ Type 0
-  (S Set) -> S $ Type 0
+  (S Prop) -> S $ Type 1
   (S (Type i)) -> S $ Type $ i + 1
   (C D _) -> error "judge' should be called after defs have been sub'd"
   (C I i) -> idefs tc M.! i
@@ -48,12 +47,17 @@ judge' ctx fix tc = \case
   (C WC _) -> error "judge' should not be called on patterns"
   F -> fromJust fix -- fixpoints get added to context
   (Var v) -> ctx M.! v
-  (Pi v t r) -> case (t, judge' (M.insert v t ctx) fix tc r) of
+  p@(Pi v t r) -> case (t, judge' (M.insert v t ctx) fix tc r) of
     (S Prop, S Prop) -> S Prop -- implication
-    (S Set, S s2) -> S s2 -- type of first order predicates (when s2 is prop) or functions (when s2 is Set) or higher order predicates (s2 is type i)
+    (S (Type 0), S s2) -> S s2 -- type of first order predicates (when s2 is prop) or functions (when s2 is Set) or higher order predicates (s2 is type i)
     (S (Type i), S (Type j)) -> S $ Type $ max i j
     (S x, S y) -> error $ "Predicative calculus of inductive constructions forbids " ++ show x ++ show y
-    _ -> error "Pi type's source type and type of target  must be sorts"
+    bad ->
+      error $
+        "Pi type's source type and type of target must be sorts "
+          <> show bad
+          <> " \n in term: "
+          <> show p
   (Lam v t r) -> Pi v t $ judge' (M.insert v t ctx) fix tc r
   (App a b) -> case judge' ctx fix tc a of
     Pi v _ r -> sub v b r

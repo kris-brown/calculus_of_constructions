@@ -37,10 +37,10 @@ where
 
 import Control.Monad (foldM)
 import Data.Bifunctor (bimap)
+import Data.Hashable (Hashable (..))
 import Data.List (intercalate)
 import Data.Map (Map)
 import qualified Data.Map as M
---import Data.Maybe (fromJust)
 import Data.Set (Set, singleton)
 import qualified Data.Set as S
 import Data.Text (Text, pack, unpack)
@@ -48,7 +48,7 @@ import Data.Tuple (swap)
 
 -----------------------
 -- Sorts are the types of types
-data Sort = Prop | Set | Type Int deriving (Eq, Ord, Show)
+data Sort = Prop | Type Int deriving (Eq, Ord, Show)
 
 data Const
   = D -- Mark as a definition that will be substituted
@@ -90,10 +90,10 @@ prop :: Term
 prop = S Prop
 
 set :: Term
-set = S Set
+set = S (Type 0)
 
 type' :: Term
-type' = S (Type 0)
+type' = S (Type 1)
 
 -----------------------
 -- Common operations --
@@ -157,6 +157,37 @@ instance Eq Term where
   x == y = aeqEq empAEQ (x, y)
 
 --------------
+-- Hashing --
+--------------
+-- Convert term to an alpha-normal form
+alphaNorm :: Int -> Term -> Term
+alphaNorm i = \case
+  S x -> S x
+  Var x -> Var x
+  F -> F
+  C WC _ -> error "WC in alphaNorm"
+  x@C {} -> x
+  App x y -> App (alphaNorm i x) (alphaNorm i y)
+  Fix t x cs -> Fix t (alphaNorm i x) (map f cs)
+  Match x t y cs -> Match (alphaNorm i x) t (alphaNorm i y) (map f cs)
+  Lam v x y -> Lam (varName next) (alphaNorm i x) $ alphaNorm (i + 1) (sub v next y)
+  Pi v x y -> Pi (varName next) (alphaNorm i x) $ alphaNorm (i + 1) (sub v next y)
+  where
+    next = Var $ pack $ show i
+    f (x, y) =
+      let (newArgs, subDict, _) = foldl xxx ([], M.empty, i) (appArgs x)
+       in (apps (reverse newArgs), subs y subDict)
+
+xxx :: ([Term], Map Text Term, Int) -> Term -> ([Term], Map Text Term, Int)
+xxx (prevArgs, prevMap, i) (C WC x) = (C WC (varName next) : prevArgs, M.insert x next prevMap, i + 1)
+  where
+    next = Var $ pack $ show $ i + 1
+xxx (prevArgs, prevMap, i) x = (x : prevArgs, prevMap, i)
+
+instance Hashable Term where
+  hashWithSalt salt = hashWithSalt salt . show . alphaNorm 0
+
+--------------
 -- Printing --
 --------------
 
@@ -193,8 +224,10 @@ instance Show Term where
   show (C _ x) = unpack x
   show F = "<fix>"
   show (S Prop) = "Prop"
-  show (S Set) = "Set"
-  show (S (Type i)) = "Type" ++ if i == 0 then "" else show i
+  show (S (Type i)) = case i of
+    0 -> "Set"
+    1 -> "Type"
+    _ -> "Type " <> show i
   show p@Pi {} = show $ toPiLike p
   show p@Lam {} = let (args, ret) = lamArgs p in concat ["(λ", concatMap (\(a, b) -> " (" ++ unpack a ++ ": " ++ show b ++ ")") args, " => ", show ret, ")"]
   show x@App {} = let args = appArgs x in paren $ unwords (map show args)

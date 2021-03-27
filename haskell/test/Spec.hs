@@ -1,4 +1,4 @@
-import CoC.Base (base, bnot, bool, eq, false', ff, inl, le, leN, length', mkList, nat, not', or', refl, suc, three, tt, vA, vB, vN, vX, zero)
+import CoC.Base (base, bnot, bool, eq, false', ff, inl, le, leN, length', mkList, nat, not', one, or', refl, suc, three, tt, vA, vB, vN, vX, zero)
 import CoC.Checker (judge, subDef)
 import CoC.Parse (parseFile, parseLam, typed)
 import CoC.Term (Sort (..), Term (..), apps, beta, fun, funs, pis, prop, set, type')
@@ -43,6 +43,7 @@ judges =
       (refl, pis [("A", type'), ("x", vA)] $ apps [eq, vA, vX, vX]),
       (nat, set),
       (zero, nat),
+      (one, nat),
       (suc, fun nat nat),
       (leN, Pi "n" nat $ apps [le, vN, vN])
     ]
@@ -82,3 +83,4 @@ main = do
 
 --  hspec propertyTests
 -- x == y is the same as y == x
+-- and only when alphaNorm x == alphaNorm y

@@ -61,11 +61,11 @@ parseLam = do
 parseSort :: Parser Sort
 parseSort =
   (Parsec.string "Prop" >>= const (pure Prop))
-    <|> (Parsec.string "Set" >>= const (pure Set))
+    <|> (Parsec.string "Set" >>= const (pure (Type 0)))
     <|> do
       str "Type"
       i <- Parsec.many Parsec.digit
-      return $ Type (if null i then 0 else read i :: Int)
+      return $ Type (if null i then 1 else read i :: Int)
 
 parseVar :: Parser Term
 parseVar = do
